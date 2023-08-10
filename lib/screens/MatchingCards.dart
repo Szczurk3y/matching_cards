@@ -12,8 +12,6 @@ class _MatchingCardsState extends State<MatchingCards> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text("Matching Cards"),
         actions: [
           IconButton(

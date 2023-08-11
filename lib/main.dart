@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:matching_cards/screens/MatchingCards.dart';
@@ -35,11 +36,13 @@ void main() {
   );
 
   runApp(
-    MaterialApp(
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
-      home: const MatchingCards(),
+    ProviderScope(
+      child: MaterialApp(
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        themeMode: ThemeMode.system,
+        home: const MatchingCards(),
+      ),
     ),
   );
 }

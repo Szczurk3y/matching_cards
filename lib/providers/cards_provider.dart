@@ -26,12 +26,12 @@ class CardsNotifier extends StateNotifier<List<Card>> {
   }
 }
 
-final _cardsProvider = StateNotifierProvider<CardsNotifier, List<Card>>(
+final cardsProvider = StateNotifierProvider<CardsNotifier, List<Card>>(
   (ref) => CardsNotifier(),
 );
 
-final cardsProvider = Provider((ref) {
-  final cards = ref.watch(_cardsProvider);
+final shuffledCardsProvider = Provider((ref) {
+  final cards = ref.watch(cardsProvider);
   var shuffledSet = List.of(cards + cards);
   shuffledSet.shuffle();
   return shuffledSet;

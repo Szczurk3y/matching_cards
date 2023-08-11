@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:matching_cards/providers/cards_provider.dart';
 import 'package:matching_cards/widgets/game.dart';
 import 'package:matching_cards/widgets/main_drawer.dart';
 
-class MatchingCards extends StatefulWidget {
+class MatchingCards extends ConsumerStatefulWidget {
   const MatchingCards({super.key});
 
   @override
-  State<MatchingCards> createState() => _MatchingCardsState();
+  ConsumerState<MatchingCards> createState() => _MatchingCardsState();
 }
 
-class _MatchingCardsState extends State<MatchingCards> {
+class _MatchingCardsState extends ConsumerState<MatchingCards> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,19 +19,26 @@ class _MatchingCardsState extends State<MatchingCards> {
         title: const Text("Matching Cards"),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              ref.read(cardsProvider.notifier).add();
+            },
             icon: const Icon(Icons.add),
             padding: const EdgeInsets.symmetric(vertical: 10),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              ref.read(cardsProvider.notifier).remove();
+            },
             icon: const Icon(Icons.remove),
             padding: const EdgeInsets.symmetric(vertical: 10),
           ),
         ],
       ),
       drawer: const MainDrawer(),
-      body: Game(),
+      body: Center(
+        heightFactor: double.infinity,
+        child: Game(),
+      ),
     );
   }
 }

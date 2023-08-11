@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matching_cards/widgets/game.dart';
 import 'package:matching_cards/widgets/main_drawer.dart';
 
 class MatchingCards extends StatefulWidget {
@@ -28,6 +29,7 @@ class _MatchingCardsState extends State<MatchingCards> {
         ],
       ),
       drawer: const MainDrawer(),
+      body: Game(),
     );
   }
 }

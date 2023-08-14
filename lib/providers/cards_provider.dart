@@ -1,38 +1,42 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matching_cards/models/card.dart';
 
-const _minCards = 2;
-const _maxCards = 9;
+enum CardsState { four, six, eight, twelf, sixteen, eighteen }
 
-class CardsNotifier extends StateNotifier<List<Card>> {
-  CardsNotifier() : super(const [Card(1), Card(2)]);
-
-  void add() {
-    if (state.length < _maxCards) {
-      final nextCardId = state.length + 1;
-      state = [
-        ...state,
-        Card(nextCardId),
-      ];
-    }
-  }
-
-  void remove() {
-    if (state.length > _minCards) {
-      final newState = List.of(state);
-      newState.removeLast();
-      state = newState;
-    }
+extension CardsStateExtension on CardsState {
+  int get number {
+    return switch (this) {
+      CardsState.four => 4,
+      CardsState.six => 6,
+      CardsState.eight => 8,
+      CardsState.twelf => 12,
+      CardsState.sixteen => 16,
+      CardsState.eighteen => 18,
+    };
   }
 }
 
-final cardsProvider = StateNotifierProvider<CardsNotifier, List<Card>>(
+class CardsNotifier extends StateNotifier<CardsState> {
+  CardsNotifier() : super(CardsState.four);
+
+  void add() {
+    if (state == CardsState.values.last) return;
+    state = CardsState.values.elementAt(CardsState.values.indexOf(state) + 1);
+  }
+
+  void remove() {
+    if (state == CardsState.values.first) return;
+    state = CardsState.values.elementAt(CardsState.values.indexOf(state) - 1);
+  }
+}
+
+final cardsStateProvider = StateNotifierProvider<CardsNotifier, CardsState>(
   (ref) => CardsNotifier(),
 );
 
 final shuffledCardsProvider = Provider((ref) {
-  final cards = ref.watch(cardsProvider);
-  var shuffledSet = List.of(cards + cards);
-  shuffledSet.shuffle();
-  return shuffledSet;
+  final cardsState = ref.watch(cardsStateProvider);
+  List<Card> shuffledCards = [for (var id = 1; id <= cardsState.number; id++) Card(id)];
+  shuffledCards.shuffle();
+  return shuffledCards;
 });

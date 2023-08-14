@@ -20,14 +20,14 @@ class _MatchingCardsState extends ConsumerState<MatchingCards> {
         actions: [
           IconButton(
             onPressed: () {
-              ref.read(cardsProvider.notifier).add();
+              ref.read(cardsStateProvider.notifier).add();
             },
             icon: const Icon(Icons.add),
             padding: const EdgeInsets.symmetric(vertical: 10),
           ),
           IconButton(
             onPressed: () {
-              ref.read(cardsProvider.notifier).remove();
+              ref.read(cardsStateProvider.notifier).remove();
             },
             icon: const Icon(Icons.remove),
             padding: const EdgeInsets.symmetric(vertical: 10),

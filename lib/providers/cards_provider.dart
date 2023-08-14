@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matching_cards/models/card.dart';
 
 const _minCards = 2;
-const _maxCards = 8;
+const _maxCards = 9;
 
 class CardsNotifier extends StateNotifier<List<Card>> {
   CardsNotifier() : super(const [Card(1), Card(2)]);

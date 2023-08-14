@@ -15,19 +15,31 @@ class _GameState extends ConsumerState<Game> {
   Widget build(BuildContext context) {
     final shuffledCards = ref.watch(shuffledCardsProvider);
     final int columns = shuffledCards.length <= 8 ? 2 : 3;
-    return GridView(
-      shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: columns,
-        childAspectRatio: 5 / 4,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
+    final double aspectRatio = shuffledCards.length <= 6
+        ? 1.0
+        : shuffledCards.length <= 8
+            ? 1.2
+            : shuffledCards.length <= 12
+                ? 0.8
+                : shuffledCards.length <= 14
+                    ? 1
+                    : 1.2;
+    const double spacing = 20;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GridView(
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: columns,
+          childAspectRatio: aspectRatio,
+          mainAxisSpacing: spacing,
+        ),
+        children: shuffledCards
+            .map(
+              (card) => CardGridItem(cardId: card.id),
+            )
+            .toList(),
       ),
-      children: shuffledCards
-          .map(
-            (card) => CardGridItem(cardId: card.id),
-          )
-          .toList(),
     );
   }
 }

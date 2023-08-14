@@ -72,6 +72,7 @@ flutter:
     - assets/card6.png
     - assets/card7.png
     - assets/card8.png
+    - assets/card9.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

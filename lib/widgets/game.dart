@@ -15,13 +15,17 @@ class _GameState extends ConsumerState<Game> {
   Widget build(BuildContext context) {
     final cardsState = ref.watch(shuffledCardsProvider);
     final shuffledCards = cardsState.shuffledCards.map((card) => CardGridItem(cardId: card.id)).toList();
-    final int columns = shuffledCards.length <= 8 ? 2 : 3;
+    // final int columns = shuffledCards.length <= 8 ? 2 : 3;
+    final int columns = switch (cardsState.state) {
+      CardsState.twelf => 3,
+      CardsState.eighteen => 3,
+      _ => 2,
+    };
     final double aspectRatio = switch (cardsState.state) {
       CardsState.eight => 1.2,
       CardsState.twelf => 0.8,
-      CardsState.sixteen => 1.2,
       CardsState.eighteen => 1.2,
-      _ => 1.0 // default
+      _ => 1.0
     };
 
     const double spacing = 20;

@@ -6,7 +6,7 @@ class CardGridItem extends StatelessWidget {
     card = game_card.Card(cardId);
   }
 
-  late game_card.Card card;
+  late final game_card.Card card;
 
   @override
   Widget build(BuildContext context) {

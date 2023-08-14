@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matching_cards/models/card.dart';
 
-enum CardsState { four, six, eight, twelf, sixteen, eighteen }
+enum CardsState { four, six, eight, twelf, eighteen }
 
 extension CardsStateExtension on CardsState {
   int get number {
@@ -10,7 +10,6 @@ extension CardsStateExtension on CardsState {
       CardsState.six => 6,
       CardsState.eight => 8,
       CardsState.twelf => 12,
-      CardsState.sixteen => 16,
       CardsState.eighteen => 18,
     };
   }

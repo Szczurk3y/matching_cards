@@ -16,6 +16,13 @@ extension CardsStateExtension on CardsState {
   }
 }
 
+class _CardsStateProvider {
+  const _CardsStateProvider({required this.state, required this.shuffledCards});
+
+  final CardsState state;
+  final List<Card> shuffledCards;
+}
+
 class CardsNotifier extends StateNotifier<CardsState> {
   CardsNotifier() : super(CardsState.four);
 
@@ -34,9 +41,9 @@ final cardsStateProvider = StateNotifierProvider<CardsNotifier, CardsState>(
   (ref) => CardsNotifier(),
 );
 
-final shuffledCardsProvider = Provider((ref) {
+final shuffledCardsProvider = Provider<_CardsStateProvider>((ref) {
   final cardsState = ref.watch(cardsStateProvider);
   List<Card> shuffledCards = [for (var id = 1; id <= cardsState.number; id++) Card(id)];
   shuffledCards.shuffle();
-  return shuffledCards;
+  return _CardsStateProvider(state: cardsState, shuffledCards: shuffledCards);
 });

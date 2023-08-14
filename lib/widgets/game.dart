@@ -13,18 +13,19 @@ class Game extends ConsumerStatefulWidget {
 class _GameState extends ConsumerState<Game> {
   @override
   Widget build(BuildContext context) {
-    final shuffledCards = ref.watch(shuffledCardsProvider);
+    final cardsState = ref.watch(shuffledCardsProvider);
+    final shuffledCards = cardsState.shuffledCards.map((card) => CardGridItem(cardId: card.id)).toList();
     final int columns = shuffledCards.length <= 8 ? 2 : 3;
-    final double aspectRatio = shuffledCards.length <= 6
-        ? 1.0
-        : shuffledCards.length <= 8
-            ? 1.2
-            : shuffledCards.length <= 12
-                ? 0.8
-                : shuffledCards.length <= 14
-                    ? 1
-                    : 1.2;
+    final double aspectRatio = switch (cardsState.state) {
+      CardsState.eight => 1.2,
+      CardsState.twelf => 0.8,
+      CardsState.sixteen => 1.2,
+      CardsState.eighteen => 1.2,
+      _ => 1.0 // default
+    };
+
     const double spacing = 20;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GridView(
@@ -34,11 +35,7 @@ class _GameState extends ConsumerState<Game> {
           childAspectRatio: aspectRatio,
           mainAxisSpacing: spacing,
         ),
-        children: shuffledCards
-            .map(
-              (card) => CardGridItem(cardId: card.id),
-            )
-            .toList(),
+        children: shuffledCards,
       ),
     );
   }

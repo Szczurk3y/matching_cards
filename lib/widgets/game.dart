@@ -14,7 +14,7 @@ class _GameState extends ConsumerState<Game> {
   @override
   Widget build(BuildContext context) {
     final shuffledCards = ref.watch(shuffledCardsProvider);
-    final int columns = shuffledCards.length <= 8 ? shuffledCards.length ~/ 2 : 4;
+    final int columns = shuffledCards.length <= 8 ? 2 : 3;
     return GridView(
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -25,7 +25,7 @@ class _GameState extends ConsumerState<Game> {
       ),
       children: shuffledCards
           .map(
-            (card) => CardGridItem(),
+            (card) => CardGridItem(cardId: card.id),
           )
           .toList(),
     );

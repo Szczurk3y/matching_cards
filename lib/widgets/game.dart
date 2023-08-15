@@ -20,15 +20,15 @@ class _GameState extends ConsumerState<Game> {
         )
         .toList();
     // final int columns = shuffledCards.length <= 8 ? 2 : 3;
-    final int columns = switch (cardsState.state) {
-      CardsState.twelf => 3,
-      CardsState.eighteen => 3,
+    final int columns = switch (cardsState.cardsQuantityState) {
+      CardsQuantityState.twelf => 3,
+      CardsQuantityState.eighteen => 3,
       _ => 2,
     };
-    final double aspectRatio = switch (cardsState.state) {
-      CardsState.eight => 1.2,
-      CardsState.twelf => 0.8,
-      CardsState.eighteen => 1.2,
+    final double aspectRatio = switch (cardsState.cardsQuantityState) {
+      CardsQuantityState.eight => 1.2,
+      CardsQuantityState.twelf => 0.8,
+      CardsQuantityState.eighteen => 1.2,
       _ => 1.0
     };
 

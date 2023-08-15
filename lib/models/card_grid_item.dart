@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matching_cards/models/card.dart' as game_card;
+import 'package:matching_cards/providers/cards_provider.dart';
 
 class CardGridItem extends StatefulWidget {
   CardGridItem({required int cardId, super.key}) {
@@ -13,15 +14,13 @@ class CardGridItem extends StatefulWidget {
 }
 
 class _CardGridItemState extends State<CardGridItem> {
-  var isDisplayed = false;
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      child: Image.asset(isDisplayed ? widget.card.front : widget.card.back),
+      child: Image.asset(widget.card.imagePath),
       onTap: () {
         setState(() {
-          isDisplayed = true;
+          widget.card.show();
         });
       },
     );

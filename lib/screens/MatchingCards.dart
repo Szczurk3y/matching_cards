@@ -12,7 +12,15 @@ class MatchingCards extends ConsumerStatefulWidget {
 }
 
 class _MatchingCardsState extends ConsumerState<MatchingCards> {
-  void refresh() {}
+  void refresh() {
+    setState(() {
+      ref.read(shuffledCardsProvider).shuffledCards.forEach(
+        (card) {
+          card.hide();
+        },
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

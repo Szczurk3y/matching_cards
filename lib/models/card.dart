@@ -1,13 +1,32 @@
-class Card {
-  const Card(this.id);
+import 'package:matching_cards/providers/cards_provider.dart';
 
-  String get front {
+class Card {
+  Card(this.id);
+
+  final int id;
+  CardState _state = CardState.hidden;
+  CardState get state => _state;
+
+  String get imagePath {
+    return switch (state) {
+      CardState.hidden => _back,
+      CardState.shown => _front,
+    };
+  }
+
+  String get _front {
     return "assets/card$id.png";
   }
 
-  String get back {
+  String get _back {
     return "assets/card_hidden.png";
   }
 
-  final int id;
+  void show() {
+    _state = CardState.shown;
+  }
+
+  void hide() {
+    _state = CardState.hidden;
+  }
 }

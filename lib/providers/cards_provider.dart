@@ -1,42 +1,44 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matching_cards/models/card.dart';
 
-enum CardsState { four, six, eight, twelf, eighteen }
+enum CardsQuantityState { four, six, eight, twelf, eighteen }
 
-extension CardsStateExtension on CardsState {
+enum CardState { hidden, shown }
+
+extension CardsStateExtension on CardsQuantityState {
   int get number {
     return switch (this) {
-      CardsState.four => 4,
-      CardsState.six => 6,
-      CardsState.eight => 8,
-      CardsState.twelf => 12,
-      CardsState.eighteen => 18,
+      CardsQuantityState.four => 4,
+      CardsQuantityState.six => 6,
+      CardsQuantityState.eight => 8,
+      CardsQuantityState.twelf => 12,
+      CardsQuantityState.eighteen => 18,
     };
   }
 }
 
 class _CardsStateProvider {
-  const _CardsStateProvider({required this.state, required this.shuffledCards});
+  const _CardsStateProvider({required this.cardsQuantityState, required this.shuffledCards});
 
-  final CardsState state;
+  final CardsQuantityState cardsQuantityState;
   final List<Card> shuffledCards;
 }
 
-class CardsNotifier extends StateNotifier<CardsState> {
-  CardsNotifier() : super(CardsState.four);
+class CardsNotifier extends StateNotifier<CardsQuantityState> {
+  CardsNotifier() : super(CardsQuantityState.four);
 
   void add() {
-    if (state == CardsState.values.last) return;
-    state = CardsState.values.elementAt(CardsState.values.indexOf(state) + 1);
+    if (state == CardsQuantityState.values.last) return;
+    state = CardsQuantityState.values.elementAt(CardsQuantityState.values.indexOf(state) + 1);
   }
 
   void remove() {
-    if (state == CardsState.values.first) return;
-    state = CardsState.values.elementAt(CardsState.values.indexOf(state) - 1);
+    if (state == CardsQuantityState.values.first) return;
+    state = CardsQuantityState.values.elementAt(CardsQuantityState.values.indexOf(state) - 1);
   }
 }
 
-final cardsStateProvider = StateNotifierProvider<CardsNotifier, CardsState>(
+final cardsStateProvider = StateNotifierProvider<CardsNotifier, CardsQuantityState>(
   (ref) => CardsNotifier(),
 );
 
@@ -47,5 +49,5 @@ final shuffledCardsProvider = Provider<_CardsStateProvider>((ref) {
   ];
   var shuffledCards = cardsSet + List.of(cardsSet);
   shuffledCards.shuffle();
-  return _CardsStateProvider(state: cardsState, shuffledCards: shuffledCards);
+  return _CardsStateProvider(cardsQuantityState: cardsState, shuffledCards: shuffledCards);
 });

@@ -14,7 +14,11 @@ class _GameState extends ConsumerState<Game> {
   @override
   Widget build(BuildContext context) {
     final cardsState = ref.watch(shuffledCardsProvider);
-    final shuffledCards = cardsState.shuffledCards.map((card) => CardGridItem(cardId: card.id)).toList();
+    final shuffledCards = cardsState.shuffledCards
+        .map(
+          (card) => CardGridItem(cardId: card.id),
+        )
+        .toList();
     // final int columns = shuffledCards.length <= 8 ? 2 : 3;
     final int columns = switch (cardsState.state) {
       CardsState.twelf => 3,

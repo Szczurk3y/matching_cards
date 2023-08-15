@@ -12,6 +12,8 @@ class MatchingCards extends ConsumerStatefulWidget {
 }
 
 class _MatchingCardsState extends ConsumerState<MatchingCards> {
+  void refresh() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,23 +21,25 @@ class _MatchingCardsState extends ConsumerState<MatchingCards> {
         title: const Text("Matching Cards"),
         actions: [
           IconButton(
+            onPressed: refresh,
+            icon: const Icon(Icons.refresh),
+          ),
+          IconButton(
             onPressed: () {
               ref.read(cardsStateProvider.notifier).add();
             },
             icon: const Icon(Icons.add),
-            padding: const EdgeInsets.symmetric(vertical: 10),
           ),
           IconButton(
             onPressed: () {
               ref.read(cardsStateProvider.notifier).remove();
             },
             icon: const Icon(Icons.remove),
-            padding: const EdgeInsets.symmetric(vertical: 10),
           ),
         ],
       ),
       drawer: const MainDrawer(),
-      body: Center(
+      body: const Center(
         heightFactor: double.infinity,
         child: Game(),
       ),

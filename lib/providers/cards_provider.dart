@@ -42,7 +42,10 @@ final cardsStateProvider = StateNotifierProvider<CardsNotifier, CardsState>(
 
 final shuffledCardsProvider = Provider<_CardsStateProvider>((ref) {
   final cardsState = ref.watch(cardsStateProvider);
-  List<Card> shuffledCards = [for (var id = 1; id <= cardsState.number; id++) Card(id)];
+  List<Card> cardsSet = [
+    for (var id = 1; id <= cardsState.number / 2; id++) Card(id),
+  ];
+  var shuffledCards = cardsSet + List.of(cardsSet);
   shuffledCards.shuffle();
   return _CardsStateProvider(state: cardsState, shuffledCards: shuffledCards);
 });

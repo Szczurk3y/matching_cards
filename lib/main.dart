@@ -26,6 +26,13 @@ void main() {
       foregroundColor: const Color.fromARGB(255, 144, 40, 73),
     ),
     scaffoldBackgroundColor: kColorScheme.background,
+    iconButtonTheme: IconButtonThemeData(
+      style: const ButtonStyle().copyWith(
+        padding: const MaterialStatePropertyAll<EdgeInsetsGeometry>(
+          EdgeInsets.symmetric(vertical: 10),
+        ),
+      ),
+    ),
   );
 
   var darkTheme = ThemeData().copyWith(

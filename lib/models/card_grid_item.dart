@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:matching_cards/models/card.dart' as game_card;
-import 'package:matching_cards/providers/cards_provider.dart';
 
 class CardGridItem extends StatefulWidget {
   CardGridItem({required int cardId, super.key}) {
@@ -24,5 +23,11 @@ class _CardGridItemState extends State<CardGridItem> {
         });
       },
     );
+  }
+
+  void onRefresh() {
+    setState(() {
+      widget.card.hide();
+    });
   }
 }

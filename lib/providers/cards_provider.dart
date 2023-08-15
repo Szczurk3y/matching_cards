@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matching_cards/models/card.dart';
 
-enum CardsQuantityState { four, six, eight, twelf, eighteen }
+enum CardsQuantityState { four, six, eight, twelf, eighteen, refresh }
 
 enum CardState { hidden, shown }
 
@@ -13,6 +13,7 @@ extension CardsStateExtension on CardsQuantityState {
       CardsQuantityState.eight => 8,
       CardsQuantityState.twelf => 12,
       CardsQuantityState.eighteen => 18,
+      CardsQuantityState.refresh => 0,
     };
   }
 }
@@ -24,8 +25,8 @@ class _CardsStateProvider {
   final List<Card> shuffledCards;
 }
 
-class CardsNotifier extends StateNotifier<CardsQuantityState> {
-  CardsNotifier() : super(CardsQuantityState.four);
+class CardsQuantityNotifier extends StateNotifier<CardsQuantityState> {
+  CardsQuantityNotifier() : super(CardsQuantityState.four);
 
   void add() {
     if (state == CardsQuantityState.values.last) return;
@@ -36,18 +37,24 @@ class CardsNotifier extends StateNotifier<CardsQuantityState> {
     if (state == CardsQuantityState.values.first) return;
     state = CardsQuantityState.values.elementAt(CardsQuantityState.values.indexOf(state) - 1);
   }
+
+  void refresh() {
+    var oldState = state;
+    state = CardsQuantityState.refresh;
+    state = oldState;
+  }
 }
 
-final cardsStateProvider = StateNotifierProvider<CardsNotifier, CardsQuantityState>(
-  (ref) => CardsNotifier(),
+final cardsQuantityStateProvider = StateNotifierProvider<CardsQuantityNotifier, CardsQuantityState>(
+  (ref) => CardsQuantityNotifier(),
 );
 
 final shuffledCardsProvider = Provider<_CardsStateProvider>((ref) {
-  final cardsState = ref.watch(cardsStateProvider);
+  final cardsQuantityState = ref.watch(cardsQuantityStateProvider);
   List<Card> cardsSet = [
-    for (var id = 1; id <= cardsState.number / 2; id++) Card(id),
+    for (var id = 1; id <= cardsQuantityState.number / 2; id++) Card(id),
   ];
   var shuffledCards = cardsSet + List.of(cardsSet);
   shuffledCards.shuffle();
-  return _CardsStateProvider(cardsQuantityState: cardsState, shuffledCards: shuffledCards);
+  return _CardsStateProvider(cardsQuantityState: cardsQuantityState, shuffledCards: shuffledCards);
 });

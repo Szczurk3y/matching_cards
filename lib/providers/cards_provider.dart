@@ -18,17 +18,29 @@ extension CardsStateExtension on CardsQuantity {
 }
 
 class _CardsState {
-  _CardsState({required this.cardsQuantity});
+  _CardsState({required this.cardsQuantity}) {
+    _cards = _createCardsSet();
+  }
 
-  final CardsQuantity cardsQuantity;
-  late final List<Card> _cards = _createCardsSet();
+  _CardsState.fromState(_CardsState cardsState) {
+    _cards = cardsState._cards;
+    _shuffled = cardsState._shuffled;
+    cardsQuantity = cardsState.cardsQuantity;
+  }
+
+  late final CardsQuantity cardsQuantity;
+  var _shuffled = false;
+  late final List<Card> _cards;
   List<Card> get shuffledCards {
-    var cardsSet = _cards + _cards;
-    cardsSet.shuffle();
-    return cardsSet;
+    if (!_shuffled) {
+      _cards.shuffle();
+      _shuffled = true;
+    }
+    return _cards;
   }
 
   List<Card> _createCardsSet() => [
+        for (var id = 1; id <= cardsQuantity.number / 2; id++) Card(id),
         for (var id = 1; id <= cardsQuantity.number / 2; id++) Card(id),
       ];
 }
@@ -51,10 +63,18 @@ class CardsNotifier extends StateNotifier<_CardsState> {
   void refresh() {
     var cardsQuantity = state.cardsQuantity;
     var newState = _CardsState(cardsQuantity: cardsQuantity);
-    newState._cards.forEach((element) {
-      element.hide();
-    });
     state = newState;
+  }
+
+  void show(Card card) {
+    state._cards.firstWhere((c) => c.id == card.id).show();
+    var shownCardsCount = state._cards.where((c) => c.state == CardState.shown).length;
+    if (shownCardsCount >= 3) {
+      for (var c in state._cards) {
+        c.hide();
+      }
+    }
+    state = _CardsState.fromState(state);
   }
 }
 

@@ -16,7 +16,7 @@ class _GameState extends ConsumerState<Game> {
     final cardsState = ref.watch(cardsStateProvider);
     final shuffledCards = cardsState.shuffledCards
         .map(
-          (card) => CardGridItem(cardId: card.id),
+          (card) => CardGridItem(card: card),
         )
         .toList();
     // final int columns = shuffledCards.length <= 8 ? 2 : 3;

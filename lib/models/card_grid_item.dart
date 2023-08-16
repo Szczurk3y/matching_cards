@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:matching_cards/models/card.dart' as game_card;
+import 'package:matching_cards/providers/cards_provider.dart';
 
-class CardGridItem extends StatefulWidget {
-  CardGridItem({required int cardId, super.key}) {
-    card = game_card.Card(cardId);
-  }
+class CardGridItem extends ConsumerStatefulWidget {
+  const CardGridItem({required this.card, super.key});
 
-  late final game_card.Card card;
+  final game_card.Card card;
 
   @override
-  State<CardGridItem> createState() => _CardGridItemState();
+  ConsumerState<CardGridItem> createState() => _CardGridItemState();
 }
 
-class _CardGridItemState extends State<CardGridItem> {
+class _CardGridItemState extends ConsumerState<CardGridItem> {
   @override
   Widget build(BuildContext context) {
+    var cardsState = ref.read(cardsProvider.notifier);
     return InkWell(
       child: Image.asset(widget.card.imagePath),
       onTap: () {
-        setState(() {
-          widget.card.show();
-        });
+        cardsState.show(widget.card);
       },
     );
   }

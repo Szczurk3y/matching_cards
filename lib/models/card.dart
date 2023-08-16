@@ -1,9 +1,13 @@
 import 'package:matching_cards/providers/cards_provider.dart';
+import 'package:uuid/uuid.dart';
+
+const uuid = Uuid();
 
 class Card {
-  Card(this.id);
+  Card(this.imageId);
 
-  final int id;
+  final int imageId;
+  final String id = uuid.v4();
   CardState _state = CardState.hidden;
   CardState get state => _state;
 
@@ -15,7 +19,7 @@ class Card {
   }
 
   String get _front {
-    return "assets/card$id.png";
+    return "assets/card$imageId.png";
   }
 
   String get _back {

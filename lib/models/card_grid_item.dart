@@ -24,10 +24,4 @@ class _CardGridItemState extends State<CardGridItem> {
       },
     );
   }
-
-  void onRefresh() {
-    setState(() {
-      widget.card.hide();
-    });
-  }
 }

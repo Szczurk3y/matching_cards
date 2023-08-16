@@ -13,7 +13,7 @@ class MatchingCards extends ConsumerStatefulWidget {
 
 class _MatchingCardsState extends ConsumerState<MatchingCards> {
   void refresh() {
-    ref.read(cardsQuantityStateProvider.notifier).refresh();
+    ref.read(cardsProvider.notifier).refresh();
   }
 
   @override
@@ -28,13 +28,13 @@ class _MatchingCardsState extends ConsumerState<MatchingCards> {
           ),
           IconButton(
             onPressed: () {
-              ref.read(cardsQuantityStateProvider.notifier).add();
+              ref.read(cardsProvider.notifier).add();
             },
             icon: const Icon(Icons.add),
           ),
           IconButton(
             onPressed: () {
-              ref.read(cardsQuantityStateProvider.notifier).remove();
+              ref.read(cardsProvider.notifier).remove();
             },
             icon: const Icon(Icons.remove),
           ),

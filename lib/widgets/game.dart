@@ -13,22 +13,22 @@ class Game extends ConsumerStatefulWidget {
 class _GameState extends ConsumerState<Game> {
   @override
   Widget build(BuildContext context) {
-    final cardsState = ref.watch(shuffledCardsProvider);
+    final cardsState = ref.watch(cardsStateProvider);
     final shuffledCards = cardsState.shuffledCards
         .map(
           (card) => CardGridItem(cardId: card.id),
         )
         .toList();
     // final int columns = shuffledCards.length <= 8 ? 2 : 3;
-    final int columns = switch (cardsState.cardsQuantityState) {
-      CardsQuantityState.twelf => 3,
-      CardsQuantityState.eighteen => 3,
+    final int columns = switch (cardsState.cardsQuantity) {
+      CardsQuantity.twelf => 3,
+      CardsQuantity.eighteen => 3,
       _ => 2,
     };
-    final double aspectRatio = switch (cardsState.cardsQuantityState) {
-      CardsQuantityState.eight => 1.2,
-      CardsQuantityState.twelf => 0.8,
-      CardsQuantityState.eighteen => 1.2,
+    final double aspectRatio = switch (cardsState.cardsQuantity) {
+      CardsQuantity.eight => 1.2,
+      CardsQuantity.twelf => 0.8,
+      CardsQuantity.eighteen => 1.2,
       _ => 1.0
     };
 

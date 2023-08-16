@@ -10,6 +10,7 @@ class Card {
   final String id = uuid.v4();
   CardState _state = CardState.hidden;
   CardState get state => _state;
+  var hasFoundMatch = false;
 
   String get imagePath {
     return switch (state) {

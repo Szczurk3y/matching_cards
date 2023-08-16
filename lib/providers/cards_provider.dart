@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matching_cards/models/card.dart';
+import 'package:tuple/tuple.dart';
 
 enum CardsQuantity { four, six, eight, twelf, eighteen }
 
@@ -68,8 +69,13 @@ class CardsNotifier extends StateNotifier<_CardsState> {
 
   void show(Card card) {
     state._cards.firstWhere((c) => c.id == card.id).show();
-    var shownCardsCount = state._cards.where((c) => c.state == CardState.shown).length;
-    if (shownCardsCount >= 3) {
+    var shownCards = state._cards.where((c) => c.state == CardState.shown && !c.hasFoundMatch).toList();
+    if (shownCards.length > 1 && shownCards.every((c) => c.imageId == card.imageId)) {
+      shownCards.forEach((c) {
+        c.hasFoundMatch = true;
+      });
+    }
+    if (shownCards.length >= 3) {
       for (var c in state._cards) {
         c.hide();
       }

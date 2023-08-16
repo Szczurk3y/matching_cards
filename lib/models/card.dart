@@ -34,4 +34,6 @@ class Card {
   void hide() {
     _state = CardState.hidden;
   }
+
+  static final empty = Card(-1);
 }

@@ -1,8 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matching_cards/models/card.dart';
-import 'package:tuple/tuple.dart';
 
 enum CardsQuantity { four, six, eight, twelf, eighteen }
+
+enum DisplayedCardsResult { same, different }
 
 enum CardState { hidden, shown }
 
@@ -49,6 +50,8 @@ class _CardsState {
 class CardsNotifier extends StateNotifier<_CardsState> {
   CardsNotifier() : super(_CardsState(cardsQuantity: CardsQuantity.four));
 
+  var lastShownCard = Card.empty;
+
   void add() {
     if (state.cardsQuantity == CardsQuantity.values.last) return;
     final newCardsQuantity = CardsQuantity.values.elementAt(CardsQuantity.values.indexOf(state.cardsQuantity) + 1);
@@ -64,20 +67,36 @@ class CardsNotifier extends StateNotifier<_CardsState> {
   void refresh() {
     var cardsQuantity = state.cardsQuantity;
     var newState = _CardsState(cardsQuantity: cardsQuantity);
+    lastShownCard = Card.empty;
     state = newState;
   }
 
-  void show(Card card) {
-    state._cards.firstWhere((c) => c.id == card.id).show();
-    var shownCards = state._cards.where((c) => c.state == CardState.shown && !c.hasFoundMatch).toList();
-    if (shownCards.length > 1 && shownCards.every((c) => c.imageId == card.imageId)) {
-      shownCards.forEach((c) {
-        c.hasFoundMatch = true;
-      });
-    }
-    if (shownCards.length >= 3) {
-      for (var c in state._cards) {
-        c.hide();
+  void show(Card currentShownCard) {
+    if (currentShownCard.hasFoundMatch) return;
+    state._cards.elementAt(state._cards.indexOf(currentShownCard)).show();
+    if (lastShownCard == Card.empty) {
+      lastShownCard = currentShownCard;
+    } else {
+      DisplayedCardsResult? result;
+      if (lastShownCard.imageId == currentShownCard.imageId && lastShownCard.id != currentShownCard.id) {
+        result = DisplayedCardsResult.same;
+      } else if (lastShownCard.imageId != currentShownCard.imageId && lastShownCard != Card.empty) {
+        result = DisplayedCardsResult.different;
+      }
+      switch (result!) {
+        case DisplayedCardsResult.same:
+          {
+            state._cards.where((c) => c.imageId == currentShownCard.imageId).forEach((c) {
+              c.hasFoundMatch = true;
+            });
+            lastShownCard = Card.empty;
+          }
+        case DisplayedCardsResult.different:
+          {
+            state._cards.elementAt(state._cards.indexOf(lastShownCard)).hide();
+            state._cards.elementAt(state._cards.indexOf(currentShownCard)).hide();
+            lastShownCard = Card.empty;
+          }
       }
     }
     state = _CardsState.fromState(state);

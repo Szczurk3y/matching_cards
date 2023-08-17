@@ -51,6 +51,7 @@ class CardsNotifier extends StateNotifier<_CardsState> {
   CardsNotifier() : super(_CardsState(cardsQuantity: CardsQuantity.four));
 
   var lastShownCard = Card.empty;
+  var nextCardShouldWait = false;
 
   void add() {
     if (state.cardsQuantity == CardsQuantity.values.last) return;
@@ -71,35 +72,51 @@ class CardsNotifier extends StateNotifier<_CardsState> {
     state = newState;
   }
 
-  void show(Card currentShownCard) {
-    if (currentShownCard.hasFoundMatch) return;
+  void show(Card currentShownCard) async {
+    /* 
+      if user taps already displayed card or they should wait for the two different cards to hide - we do nothing.
+    */
+    if (currentShownCard.hasFoundMatch || nextCardShouldWait) return;
     state._cards.elementAt(state._cards.indexOf(currentShownCard)).show();
+    state = _CardsState.fromState(state);
+    /*
+      if no cards are displayed we show the clicked card and updates it as the last shown card.
+    */
     if (lastShownCard == Card.empty) {
       lastShownCard = currentShownCard;
-    } else {
-      DisplayedCardsResult? result;
-      if (lastShownCard.imageId == currentShownCard.imageId && lastShownCard.id != currentShownCard.id) {
-        result = DisplayedCardsResult.same;
-      } else if (lastShownCard.imageId != currentShownCard.imageId && lastShownCard != Card.empty) {
-        result = DisplayedCardsResult.different;
-      }
-      switch (result!) {
-        case DisplayedCardsResult.same:
-          {
-            state._cards.where((c) => c.imageId == currentShownCard.imageId).forEach((c) {
-              c.hasFoundMatch = true;
-            });
-            lastShownCard = Card.empty;
-          }
-        case DisplayedCardsResult.different:
-          {
+      return;
+    }
+    /* 
+      Below code executes if two cards are displayed to a user. 
+      It compares two cards and check them whether they are the same or different.
+    */
+    DisplayedCardsResult? result;
+    if (lastShownCard.imageId == currentShownCard.imageId && lastShownCard.id != currentShownCard.id) {
+      result = DisplayedCardsResult.same;
+    } else if (lastShownCard.imageId != currentShownCard.imageId && lastShownCard != Card.empty) {
+      result = DisplayedCardsResult.different;
+    }
+    switch (result!) {
+      case DisplayedCardsResult.same:
+        {
+          state._cards.where((c) => c.imageId == currentShownCard.imageId).forEach((c) {
+            c.hasFoundMatch = true;
+          });
+          lastShownCard = Card.empty;
+          state = _CardsState.fromState(state);
+        }
+      case DisplayedCardsResult.different:
+        {
+          nextCardShouldWait = true;
+          Future.delayed(const Duration(seconds: 1)).then((value) {
             state._cards.elementAt(state._cards.indexOf(lastShownCard)).hide();
             state._cards.elementAt(state._cards.indexOf(currentShownCard)).hide();
             lastShownCard = Card.empty;
-          }
-      }
+            state = _CardsState.fromState(state);
+            nextCardShouldWait = false;
+          });
+        }
     }
-    state = _CardsState.fromState(state);
   }
 }
 

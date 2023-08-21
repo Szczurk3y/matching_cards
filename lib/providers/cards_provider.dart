@@ -5,7 +5,7 @@ enum CardsQuantity { four, six, eight, twelf, eighteen }
 
 enum DisplayedCardsResult { same, different }
 
-enum CardState { hidden, shown }
+enum CardVisibility { hidden, shown }
 
 extension CardsStateExtension on CardsQuantity {
   int get number {
@@ -51,18 +51,20 @@ class CardsNotifier extends StateNotifier<_CardsState> {
   CardsNotifier() : super(_CardsState(cardsQuantity: CardsQuantity.four));
 
   var lastShownCard = Card.empty;
-  var nextCardShouldWait = false;
+  var shouldNextCardWait = false;
 
   void add() {
     if (state.cardsQuantity == CardsQuantity.values.last) return;
     final newCardsQuantity = CardsQuantity.values.elementAt(CardsQuantity.values.indexOf(state.cardsQuantity) + 1);
     state = _CardsState(cardsQuantity: newCardsQuantity);
+    shouldNextCardWait = false;
   }
 
   void remove() {
     if (state.cardsQuantity == CardsQuantity.values.first) return;
     final newCardsQuantity = CardsQuantity.values.elementAt(CardsQuantity.values.indexOf(state.cardsQuantity) - 1);
     state = _CardsState(cardsQuantity: newCardsQuantity);
+    shouldNextCardWait = false;
   }
 
   void refresh() {
@@ -70,36 +72,36 @@ class CardsNotifier extends StateNotifier<_CardsState> {
     var newState = _CardsState(cardsQuantity: cardsQuantity);
     lastShownCard = Card.empty;
     state = newState;
+    shouldNextCardWait = false;
   }
 
-  void show(Card currentShownCard) async {
-    /* 
-      if user taps already displayed card or they should wait for the two different cards to hide - we do nothing.
-    */
-    if (currentShownCard.hasFoundMatch || nextCardShouldWait) return;
-    state._cards.elementAt(state._cards.indexOf(currentShownCard)).show();
-    state = _CardsState.fromState(state);
-    /*
-      if no cards are displayed we show the clicked card and updates it as the last shown card.
-    */
+  /* 
+    this function handles displaying cards to a user.
+    returns true if card was shown to a user and false otherwise.
+  */
+  Future<bool> shouldShow(Card currentCard) async {
+    // if user taps already displayed card or they should wait for the two different cards to hide - we do nothing.
+    if (currentCard.hasFoundMatch || shouldNextCardWait) return false;
+
+    // if no cards are displayed we show the clicked card and updates it as the last shown card.
     if (lastShownCard == Card.empty) {
-      lastShownCard = currentShownCard;
-      return;
+      lastShownCard = currentCard;
+      return true;
     }
     /* 
       Below code executes if two cards are displayed to a user. 
       It compares two cards and check them whether they are the same or different.
     */
     DisplayedCardsResult? result;
-    if (lastShownCard.imageId == currentShownCard.imageId && lastShownCard.id != currentShownCard.id) {
+    if (lastShownCard.imageId == currentCard.imageId && lastShownCard.id != currentCard.id) {
       result = DisplayedCardsResult.same;
-    } else if (lastShownCard.imageId != currentShownCard.imageId && lastShownCard != Card.empty) {
+    } else if (lastShownCard.imageId != currentCard.imageId && lastShownCard != Card.empty) {
       result = DisplayedCardsResult.different;
     }
     switch (result!) {
       case DisplayedCardsResult.same:
         {
-          state._cards.where((c) => c.imageId == currentShownCard.imageId).forEach((c) {
+          state._cards.where((c) => c.imageId == currentCard.imageId).forEach((c) {
             c.hasFoundMatch = true;
           });
           lastShownCard = Card.empty;
@@ -107,16 +109,17 @@ class CardsNotifier extends StateNotifier<_CardsState> {
         }
       case DisplayedCardsResult.different:
         {
-          nextCardShouldWait = true;
+          shouldNextCardWait = true;
           Future.delayed(const Duration(seconds: 1)).then((value) {
             state._cards.elementAt(state._cards.indexOf(lastShownCard)).hide();
-            state._cards.elementAt(state._cards.indexOf(currentShownCard)).hide();
+            state._cards.elementAt(state._cards.indexOf(currentCard)).hide();
             lastShownCard = Card.empty;
             state = _CardsState.fromState(state);
-            nextCardShouldWait = false;
+            shouldNextCardWait = false;
           });
         }
     }
+    return true;
   }
 }
 

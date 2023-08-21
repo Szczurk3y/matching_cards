@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:matching_cards/providers/cards_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -8,16 +9,12 @@ class Card {
 
   final int imageId;
   final String id = uuid.v4();
-  CardState _state = CardState.hidden;
-  CardState get state => _state;
-  var hasFoundMatch = false;
+  late final Image front = Image.asset(_front);
+  late final Image back = Image.asset(_back);
 
-  String get imagePath {
-    return switch (state) {
-      CardState.hidden => _back,
-      CardState.shown => _front,
-    };
-  }
+  CardVisibility _visibility = CardVisibility.hidden;
+  CardVisibility get visibility => _visibility;
+  var hasFoundMatch = false;
 
   String get _front {
     return "assets/card$imageId.png";
@@ -28,11 +25,11 @@ class Card {
   }
 
   void show() {
-    _state = CardState.shown;
+    _visibility = CardVisibility.shown;
   }
 
   void hide() {
-    _state = CardState.hidden;
+    _visibility = CardVisibility.hidden;
   }
 
   static final empty = Card(-1);

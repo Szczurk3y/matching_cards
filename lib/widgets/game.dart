@@ -19,7 +19,6 @@ class _GameState extends ConsumerState<Game> {
           (card) => CardGridItem(card: card),
         )
         .toList();
-    // final int columns = shuffledCards.length <= 8 ? 2 : 3;
     final int columns = switch (cardsState.cardsQuantity) {
       CardsQuantity.twelf => 3,
       CardsQuantity.eighteen => 3,

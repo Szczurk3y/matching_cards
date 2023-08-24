@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:matching_cards/main.dart';
 
 class MainDrawer extends StatefulWidget {
   const MainDrawer({super.key});
@@ -8,10 +10,12 @@ class MainDrawer extends StatefulWidget {
 }
 
 class _MainDrawerState extends State<MainDrawer> {
-  var darkTheme = false;
+  late var isDarkMode;
 
   @override
   Widget build(BuildContext context) {
+    isDarkMode = App.of(context).darkMode;
+
     return Drawer(
       child: Column(
         children: [
@@ -51,20 +55,23 @@ class _MainDrawerState extends State<MainDrawer> {
             children: [
               const SizedBox(width: 10),
               Icon(
-                Icons.sunny,
-                color: darkTheme ? Colors.black87 : Colors.amber,
+                isDarkMode ? Icons.nightlight_round_outlined : Icons.sunny,
+                color: isDarkMode ? Colors.white60 : Colors.amber,
               ),
               const SizedBox(width: 10),
               Text(
                 "Dark Mode",
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: isDarkMode ? Colors.white : Colors.black,
+                    ),
               ),
               const SizedBox(width: 10),
               Switch(
-                value: darkTheme,
+                value: isDarkMode,
                 onChanged: (value) {
                   setState(() {
-                    darkTheme = !darkTheme;
+                    isDarkMode = !isDarkMode;
+                    App.of(context).setDarkMode(isDarkMode);
                   });
                 },
               ),

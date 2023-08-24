@@ -11,45 +11,68 @@ var kColorScheme = ColorScheme.fromSeed(
 );
 var kDarkColorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
-  seedColor: const Color.fromARGB(255, 5, 99, 125),
-  background: const Color.fromARGB(255, 5, 99, 125),
+  seedColor: const Color.fromARGB(255, 146, 34, 74),
 );
 
 void main() {
-  var lightTheme = ThemeData().copyWith(
-    useMaterial3: true,
-    colorScheme: kColorScheme,
-    brightness: Brightness.light,
-    textTheme: GoogleFonts.latoTextTheme(),
-    appBarTheme: const AppBarTheme().copyWith(
-      backgroundColor: const Color.fromARGB(255, 100, 223, 205),
-      foregroundColor: const Color.fromARGB(255, 144, 40, 73),
-    ),
-    scaffoldBackgroundColor: kColorScheme.background,
-    iconButtonTheme: IconButtonThemeData(
-      style: const ButtonStyle().copyWith(
-        padding: const MaterialStatePropertyAll<EdgeInsetsGeometry>(
-          EdgeInsets.symmetric(vertical: 10),
+  runApp(
+    const ProviderScope(child: App()),
+  );
+}
+
+class App extends StatefulWidget {
+  const App({super.key});
+
+  static _AppState of(BuildContext context) => context.findAncestorStateOfType<_AppState>()!;
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  bool _darkMode = false;
+  bool get darkMode => _darkMode;
+
+  void setDarkMode(bool isDarkMode) {
+    setState(() {
+      _darkMode = isDarkMode;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var lightTheme = ThemeData().copyWith(
+      useMaterial3: true,
+      colorScheme: kColorScheme,
+      brightness: Brightness.light,
+      textTheme: GoogleFonts.latoTextTheme(),
+      appBarTheme: const AppBarTheme().copyWith(
+        backgroundColor: const Color.fromARGB(255, 100, 223, 205),
+        foregroundColor: const Color.fromARGB(255, 144, 40, 73),
+      ),
+      scaffoldBackgroundColor: kColorScheme.background,
+      iconButtonTheme: IconButtonThemeData(
+        style: const ButtonStyle().copyWith(
+          padding: const MaterialStatePropertyAll<EdgeInsetsGeometry>(
+            EdgeInsets.symmetric(vertical: 10),
+          ),
         ),
       ),
-    ),
-  );
+    );
 
-  var darkTheme = ThemeData().copyWith(
-    useMaterial3: true,
-    colorScheme: kDarkColorScheme,
-    brightness: Brightness.dark,
-    textTheme: GoogleFonts.latoTextTheme(),
-  );
+    var darkTheme = ThemeData().copyWith(
+      useMaterial3: true,
+      colorScheme: kDarkColorScheme,
+      brightness: Brightness.dark,
+      textTheme: GoogleFonts.latoTextTheme(),
+      scaffoldBackgroundColor: kDarkColorScheme.background,
+    );
 
-  runApp(
-    ProviderScope(
-      child: MaterialApp(
-        theme: lightTheme,
-        darkTheme: darkTheme,
-        themeMode: ThemeMode.system,
-        home: const MatchingCards(),
-      ),
-    ),
-  );
+    return MaterialApp(
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: _darkMode ? ThemeMode.dark : ThemeMode.light,
+      home: const MatchingCards(),
+    );
+  }
 }

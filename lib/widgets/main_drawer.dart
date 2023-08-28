@@ -16,10 +16,6 @@ class _MainDrawerState extends State<MainDrawer> {
   Widget build(BuildContext context) {
     isDarkMode = App.of(context).darkMode;
 
-    print(Theme.of(context).colorScheme.primary.withOpacity(0.6).blue);
-    print(Theme.of(context).colorScheme.primary.withOpacity(0.6).green);
-    print(Theme.of(context).colorScheme.primary.withOpacity(0.6).red);
-
     return Drawer(
       child: Column(
         children: [

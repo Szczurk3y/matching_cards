@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:matching_cards/main.dart';
 
 class MainDrawer extends StatefulWidget {

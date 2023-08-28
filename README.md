@@ -5,5 +5,6 @@ With various levels of difficulty, from easy to expert, this game is perfect for
 Sharpen your cognitive skills while having a blast with this classic matching cards game!
 
 ## Getting Started
-1) Visit Google Play Store: https://play.google.com/store/apps/details?id=szczurk3y.game.matching_cards
-2) Download the content.
+1) Visit Google Play Store:
+https://play.google.com/store/apps/details?id=szczurk3y.game.matching_cards
+3) Download the content.

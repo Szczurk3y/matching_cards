@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:matching_cards/main.dart';
 
 class MainDrawer extends StatefulWidget {
@@ -15,10 +14,6 @@ class _MainDrawerState extends State<MainDrawer> {
   @override
   Widget build(BuildContext context) {
     isDarkMode = App.of(context).darkMode;
-
-    print(Theme.of(context).colorScheme.primary.withOpacity(0.6).blue);
-    print(Theme.of(context).colorScheme.primary.withOpacity(0.6).green);
-    print(Theme.of(context).colorScheme.primary.withOpacity(0.6).red);
 
     return Drawer(
       child: Column(

@@ -7,3 +7,6 @@ Sharpen your cognitive skills while having a blast with this classic matching ca
 ## Getting Started
 1) Visit Google Play Store: https://play.google.com/store/apps/details?id=szczurk3y.game.matching_cards
 3) Download the content.
+
+### Preview
+<img src="./demo.gif" alt="matchingCardsPreview" height="544", width="259">

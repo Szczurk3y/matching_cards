@@ -10,3 +10,9 @@ Sharpen your cognitive skills while having a blast with this classic matching ca
 
 ## Preview
 <img src="./demo.gif" alt="matchingCardsPreview">
+
+## Technologies:
+- Riverpod
+- Uuid
+- Cupertino icons
+- Google fonts
